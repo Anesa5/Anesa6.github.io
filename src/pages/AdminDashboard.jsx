@@ -1,5 +1,5 @@
 // AdminDashboard.jsx - Updated with Full Screen Doctor Profile Modal
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
     Users, CheckCircle, Clock, AlertCircle,
@@ -10,9 +10,9 @@ import {
     CheckCircle2, Info, Bell, MessageCircle,
     Award, BookOpen, Star, Globe, Shield,
     Activity, Heart, Stethoscope, FileText,
-    ChevronLeft, ChevronRight, Printer, Share2,
-    MoreVertical, Download as DownloadIcon,
-    Video, MessageCircle as MessageIcon
+    Printer, Share2,
+    Download as DownloadIcon,
+    MessageCircle as MessageIcon
 } from 'lucide-react';
 import './AdminDashboard.css';
 
@@ -37,11 +37,6 @@ const AdminDashboard = () => {
     const [newAdmin, setNewAdmin] = useState({ name: '', email: '', password: '', role: 'admin' });
     const [profileTab, setProfileTab] = useState('overview');
 
-    useEffect(() => {
-        fetchDashboardData();
-        fetchSMSLogs();
-    }, [activeTab]);
-
     // Search functionality
     useEffect(() => {
         if (allDoctors.length > 0) {
@@ -60,7 +55,47 @@ const AdminDashboard = () => {
         setTimeout(() => setNotification({ show: false, type: '', message }), 5000);
     };
 
-    const fetchDashboardData = async () => {
+    // const fetchDashboardData = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const token = localStorage.getItem('token');
+
+    //         if (!token) {
+    //             window.location.href = '/admin/login';
+    //             return;
+    //         }
+
+    //         if (activeTab === 'dashboard') {
+    //             const statsRes = await axios.get('http://localhost:5000/api/admin/doctors/stats/dashboard', {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             });
+    //             setStats(statsRes.data.data);
+
+    //             const pendingRes = await axios.get('http://localhost:5000/api/admin/doctors/pending', {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             });
+    //             setPendingDoctors(pendingRes.data.data);
+    //         }
+
+    //         if (activeTab === 'doctors' || activeTab === 'pending') {
+    //             const doctorsRes = await axios.get('http://localhost:5000/api/admin/doctors', {
+    //                 headers: { Authorization: `Bearer ${token}` }
+    //             });
+    //             setAllDoctors(doctorsRes.data.data);
+    //             setFilteredDoctors(doctorsRes.data.data);
+    //         }
+
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //         if (error.response?.status === 401) {
+    //             localStorage.removeItem('token');
+    //             window.location.href = '/admin/login';
+    //         }
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    const fetchDashboardData = useCallback(async () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
@@ -99,7 +134,7 @@ const AdminDashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [activeTab]);
 
     const fetchSMSLogs = async () => {
         try {
@@ -112,6 +147,12 @@ const AdminDashboard = () => {
             console.error('Error fetching SMS logs:', error);
         }
     };
+
+
+    useEffect(() => {
+        fetchDashboardData();
+        fetchSMSLogs();
+    }, [activeTab, fetchDashboardData]);
 
     // ======================
     // DOCTOR PROFILE MODAL FUNCTIONS
@@ -234,9 +275,9 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleViewDoctor = (doctor) => {
-        openDoctorProfile(doctor);
-    };
+    // const handleViewDoctor = (doctor) => {
+    //     openDoctorProfile(doctor);
+    // };
 
     const handleEditDoctor = (doctor) => {
         alert(`Edit doctor: ${doctor.name}`);

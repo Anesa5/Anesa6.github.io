@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../Context/AuthContext";
+// import { AuthContext } from "../Context/AuthContext";
 
 const PatientHome = () => {
     const [doctors, setDoctors] = useState([]);
-    const { user } = useContext(AuthContext);
+    // const { user } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchDoctors = async () => {

@@ -1,5 +1,5 @@
 // components/ReviewsList.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import RatingStars from './RatingStars';
 
@@ -16,11 +16,7 @@ const ReviewsList = ({ doctorId }) => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    useEffect(() => {
-        fetchReviews();
-    }, [doctorId, page, sort]);
-
-    const fetchReviews = async () => {
+    const fetchReviews = useCallback(async () => {
         try {
             setLoading(true);
             const response = await axios.get(
@@ -31,11 +27,9 @@ const ReviewsList = ({ doctorId }) => {
             setReviews(response.data.reviews);
             setTotalPages(response.data.totalPages);
 
-            // Calculate stats from response
             const dist = response.data.ratingDistribution || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
             const total = response.data.totalReviews;
 
-            // Calculate weighted average
             let sum = 0;
             let count = 0;
             Object.entries(dist).forEach(([rating, num]) => {
@@ -57,7 +51,11 @@ const ReviewsList = ({ doctorId }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [doctorId, page, sort]);
+
+    useEffect(() => {
+        fetchReviews();
+    }, [fetchReviews]);
 
     if (loading && page === 1) {
         return (

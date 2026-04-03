@@ -1,5 +1,5 @@
 // DoctorProfile.jsx - FINAL WORKING VERSION WITH SERVICES
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './DoctorProfile.css';
@@ -16,11 +16,8 @@ export default function DoctorProfile() {
     const [selectedClinic, setSelectedClinic] = useState(0);
     const [selectedDay, setSelectedDay] = useState(0);
     const [activeTab, setActiveTab] = useState('overview');
-    const [reviews, setReviews] = useState([]); // ✅ Reviews state add kiya
+    // const [reviews, setReviews] = useState([]); // ✅ Reviews state add kiya
 
-    useEffect(() => {
-        fetchDoctorProfile();
-    }, [id]);
 
     // ✅ Function to calculate average rating from reviews
     const calculateAverageRating = (reviewsList) => {
@@ -29,42 +26,30 @@ export default function DoctorProfile() {
         return sum / reviewsList.length;
     };
 
-    const fetchDoctorProfile = async () => {
+    const fetchDoctorProfile = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
 
-            // ✅ Dono calls ek saath karo - doctor profile aur reviews
             const [profileRes, reviewsRes] = await Promise.all([
                 axios.get(`http://localhost:5000/api/doctor-profile/${id}`),
                 axios.get(`http://localhost:5000/api/reviews/doctor/${id}`)
             ]);
 
-            console.log('📦 Profile Response:', profileRes.data);
-            console.log('📦 Reviews Response:', reviewsRes.data);
-
             if (profileRes.data.success) {
                 let doctorData = profileRes.data.data;
 
-                // ✅ Reviews ko state mein save karo
                 const reviewsData = reviewsRes.data.success ? reviewsRes.data.reviews || [] : [];
-                setReviews(reviewsData);
 
-                // ✅ Average rating calculate karo
                 const avgRating = calculateAverageRating(reviewsData);
                 const totalReviews = reviewsData.length;
 
-                // ✅ Doctor object mein rating aur totalReviews update karo
                 doctorData = {
                     ...doctorData,
                     rating: avgRating,
                     totalReviews: totalReviews,
                     reviews: reviewsData
                 };
-
-                console.log('👨‍⚕️ Updated Doctor Data:', doctorData);
-                console.log('⭐ Calculated Rating:', avgRating);
-                console.log('📊 Total Reviews:', totalReviews);
 
                 setDoctor(doctorData);
             } else {
@@ -76,7 +61,11 @@ export default function DoctorProfile() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]); // 👈 dependency
+
+    useEffect(() => {
+        fetchDoctorProfile();
+    }, [fetchDoctorProfile]);
 
     const handleBookAppointment = (doctorName, doctorTitle) => {
         const whatsappNumber = "03374768957";

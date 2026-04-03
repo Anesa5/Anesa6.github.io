@@ -42,7 +42,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchCategoriesWithDoctors();
-  }, []);
+  });
 
   const fetchCategoriesWithDoctors = async () => {
     try {

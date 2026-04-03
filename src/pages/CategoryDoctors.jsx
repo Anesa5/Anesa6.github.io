@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+// import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 export default function CategoryDoctors() {
     const { categoryName } = useParams();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [category, setCategory] = useState(null);
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Star, Clock, Award, Tag } from 'lucide-react';
+import { MapPin, Award, Tag } from 'lucide-react';
 
 const SearchResults = ({ results, onPageChange }) => {
     if (!results || !results.doctors || results.doctors.length === 0) {

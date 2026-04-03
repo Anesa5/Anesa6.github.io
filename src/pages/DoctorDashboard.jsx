@@ -1,5 +1,5 @@
 // DoctorDashboard.jsx - REACT COMPONENT
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,15 +36,39 @@ const DoctorDashboard = () => {
     // Get token from localStorage
     const token = localStorage.getItem('doctorToken');
 
-    useEffect(() => {
-        if (!token) {
-            navigate('/doctor/login');
-            return;
-        }
-        fetchDoctorProfile();
-    }, [token, navigate]);
+    // const fetchDoctorProfile = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await axios.get('http://localhost:5000/api/doctor-dashboard/profile', {
+    //             headers: { Authorization: `Bearer ${token}` }
+    //         });
 
-    const fetchDoctorProfile = async () => {
+    //         if (response.data.success) {
+    //             setDoctor(response.data.data);
+    //             setFormData({
+    //                 name: response.data.data.name || '',
+    //                 phone: response.data.data.phone || '',
+    //                 qualification: response.data.data.qualification || '',
+    //                 experience: response.data.data.experience || '',
+    //                 specialization: response.data.data.specialization || '',
+    //                 bio: response.data.data.bio || ''
+    //             });
+    //             setClinics(response.data.data.clinics || []);
+    //             setServices(response.data.data.services || []);
+    //             setEducation(response.data.data.education || []);
+    //             setLanguages(response.data.data.languages || []);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching profile:', error);
+    //         if (error.response?.status === 401) {
+    //             localStorage.removeItem('doctorToken');
+    //             navigate('/doctor/login');
+    //         }
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    const fetchDoctorProfile = useCallback(async () => {
         try {
             setLoading(true);
             const response = await axios.get('http://localhost:5000/api/doctor-dashboard/profile', {
@@ -75,8 +99,15 @@ const DoctorDashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [token, navigate]);
 
+    useEffect(() => {
+        if (!token) {
+            navigate('/doctor/login');
+            return;
+        }
+        fetchDoctorProfile();
+    }, [token, navigate, fetchDoctorProfile]);
     const handleInputChange = (e) => {
         setFormData({
             ...formData,
