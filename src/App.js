@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -13,11 +18,11 @@ import AdminDashboard from "./pages/AdminDashboard";
 import DoctorProfile from "./components/DoctorProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./Context/AuthContext";
-import CategoryDoctors from './pages/CategoryDoctors';
-import DoctorLogin from './components/DoctorLogin';
-import AdminLogin from './components/AdminLogin';
-import AdminSetup from './pages/AdminSetup';
-import AdminCreate from './components/AdminCreate';
+import CategoryDoctors from "./pages/CategoryDoctors";
+import DoctorLogin from "./components/DoctorLogin";
+import AdminLogin from "./components/AdminLogin";
+import AdminSetup from "./pages/AdminSetup";
+import AdminCreate from "./components/AdminCreate";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import SearchBar from "./components/SearchBar";
 import SearchResults from "./components/SearchResults";
@@ -30,7 +35,7 @@ import axios from "axios";
 
 // Protected Route for Admin
 const AdminRoute = ({ children }) => {
-  const token = localStorage.getItem('adminToken');
+  const token = localStorage.getItem("adminToken");
   return token ? children : <Navigate to="/admin/login" />;
 };
 
@@ -43,12 +48,15 @@ const App = () => {
     setLoading(true);
     setCurrentSearchParams(searchParams);
     try {
-      const response = await axios.get('http://localhost:5000/api/doctors/search', {
-        params: searchParams
-      });
+      const response = await axios.get(
+        "http://localhost:5000/api/doctors/search",
+        {
+          params: searchParams,
+        },
+      );
       setSearchResults(response.data);
     } catch (error) {
-      console.error('Search error:', error);
+      console.error("Search error:", error);
     } finally {
       setLoading(false);
     }
@@ -57,15 +65,18 @@ const App = () => {
   const handlePageChange = async (newPage) => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/doctors/search', {
-        params: {
-          ...currentSearchParams,
-          page: newPage
-        }
-      });
+      const response = await axios.get(
+        "http://localhost:5000/api/doctors/search",
+        {
+          params: {
+            ...currentSearchParams,
+            page: newPage,
+          },
+        },
+      );
       setSearchResults(response.data);
     } catch (error) {
-      console.error('Pagination error:', error);
+      console.error("Pagination error:", error);
     } finally {
       setLoading(false);
     }
@@ -73,7 +84,7 @@ const App = () => {
 
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/Anesa6.github.io">
         <Navbar />
         <Routes>
           {/* Public Routes */}
@@ -156,11 +167,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/admin/dashboard" element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          } />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
 
           {/* Fallback Route */}
           <Route path="*" element={<Navigate to="/" />} />

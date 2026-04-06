@@ -80,7 +80,7 @@ npm install gh-pages --save-dev
 ### Copy this in package.json along with the name, version.
 
 ```bash
-"homepage": "https://Anesa6.github.io"
+"homepage": "https://anesa5.github.io/Anesa6.github.io"
 ```
 
 ### Copy this in package.json along in the scripts
