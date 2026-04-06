@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Anesa6.github.io/static/css/main.005efbdb.css",
+    "main.js": "/Anesa6.github.io/static/js/main.65dd220b.js",
+    "index.html": "/Anesa6.github.io/index.html",
+    "main.005efbdb.css.map": "/Anesa6.github.io/static/css/main.005efbdb.css.map",
+    "main.65dd220b.js.map": "/Anesa6.github.io/static/js/main.65dd220b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.005efbdb.css",
+    "static/js/main.65dd220b.js"
+  ]
+}
